@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
-const Genres = () => {
+const Series = () => {
     const [data, setData] = useState([])
 
     useEffect(() => {
         axios
-            .get('/api/genres')
+            .get('/api/series')
             .then(res => {
                 setData(res.data.data)
             })
     }, [])
 
-    const deleteGenre = id => {
-        axios.delete('/api/genres/' + id)
+    const deleteSerie = id => {
+        axios.delete('/api/series/' + id)
             .then(res => {
                 const filtered = data.filter(item => item.id !== id)
                 setData(filtered)
@@ -27,8 +27,8 @@ const Genres = () => {
                 <th scope='row'>{record.id}</th>
                 <td>{record.name}</td>
                 <td>
-                    <Link className='btn btn-warning' to={'/genres/' + record.id}>Edit</Link>
-                    <button className='btn btn-danger' onClick={() => deleteGenre(record.id)}>Remove</button>
+                    <Link className='btn btn-warning' to={'/series/' + record.id}>Edit</Link>
+                    <button className='btn btn-danger' onClick={() => deleteSerie(record.id)}>Remove</button>
                 </td>
             </tr>
         )
@@ -37,11 +37,11 @@ const Genres = () => {
     if (data.length === 0) {
         return (
             <div className='container'>
-                <h1>Genres</h1>
-                <Link to='/genres/new' className='btn btn-primary'>New Genre</Link>
+                <h1>Series</h1>
+                <Link to='/series/new' className='btn btn-primary'>New Serie</Link>
                 <br /><br />
                 <div className='alert alert-warning' role='alert'>
-                    Genres are empty.
+                    Series are empty.
                 </div>
             </div>
         )
@@ -49,8 +49,8 @@ const Genres = () => {
 
     return (
         <div className='container'>
-            <h1>Genres</h1>
-            <Link to='/genres/new' className='btn btn-primary'>New Genre</Link>
+            <h1>Series</h1>
+            <Link to='/series/new' className='btn btn-primary'>New Serie</Link>
             <br /><br />
             <table className='table table-dark'>
                 <thead>
@@ -68,4 +68,4 @@ const Genres = () => {
     )
 }
 
-export default Genres
+export default Series
