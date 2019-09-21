@@ -26,10 +26,10 @@ const NewGenre = () => {
             <h1>New Genre</h1>
             <form>
                 <div className='form-group'>
-                    <label for='name'>Name</label>
+                    <label htmlFor='name'>Name</label>
                     <input type='text' value={name} onChange={onChange} className='form-control' id='name' placeholder='Genre name'/>
                 </div>
-                <button onClick={save} type='button' className='btn btn-primary'>Submit</button>
+                <button onClick={save} type='button' className='btn btn-success'>Submit</button>
             </form>
         </div>
     )
