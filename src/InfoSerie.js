@@ -6,7 +6,8 @@ import { Badge } from 'reactstrap'
 const InfoSerie = ({ match }) => {
     const [form, setForm] = useState({})
     const [success, setSuccess] = useState(false) //No success yet
-    const [mode, setMode] = useState('INFO')
+    const [mode, setMode] = useState('EDIT')
+    const [genre, setGenre] = useState([])
 
     const [data, setData] = useState({})
 
@@ -19,6 +20,13 @@ const InfoSerie = ({ match }) => {
             })
     }, [match.params.id])
 
+    useEffect(() => { //quando carregar o componente ele trás os dados
+        axios
+            .get('/api/genres/')
+            .then(res => {
+                setGenre(res.data.data)
+            })
+    }, []) //Without dependences
 
     //custom header
     const masterHeader = {
@@ -36,17 +44,24 @@ const InfoSerie = ({ match }) => {
             [field]: evt.target.value
         })
     }
-    const save = () => {
-        axios.post('/api/series', {
-            form
+
+    const selectStatus = value => () => {
+        setForm({
+            ...form,
+            status: value
         })
+    }
+
+    const save = () => {
+        axios
+            .put('/api/series/' + match.params.id, form)
             .then(res => {
                 setSuccess(true)
             })
     }
 
     if (success) {
-        return <Redirect to='/series' />
+        //return <Redirect to='/series' />
     }
 
     return (
@@ -97,6 +112,25 @@ const InfoSerie = ({ match }) => {
                             <label htmlFor='comments'>Comments</label>
                             <input type='text' value={form.comments} onChange={onChange('comments')} className='form-control' id='comments ' placeholder='Comments' />
                         </div>
+                        <div className='form-group'>
+                            <label htmlFor='genre'>Genre</label>
+                            <select className='form-control' onChange={onChange('genre_id')}>
+                                {genre.map(genre => <option key={genre.id} value={genre.id} select={genre.id === form.genre}>{genre.name}</option>)}
+                            </select>
+                        </div>
+                        <div className='form-check'>
+                            <input className='form-check-input' type='radio' name='status' id='watched' value='WATCHED' onClick={selectStatus('WATCHED')}/>
+                            <label className='form-check-label' htmlFor='watched'>
+                                Watched
+                            </label>
+                        </div>
+                        <div className='form-check'>
+                            <input className='form-check-input' type='radio' name='status' id='toWatch' value='TO_WATCH' onClick={selectStatus('TO_WATCH')}/>
+                            <label className='form-check-label' htmlFor='toWatch'>
+                                To watch
+                            </label>
+                        </div>
+                        <br/>
                         <button onClick={save} type='button' className='btn btn-success'>Submit</button>
                     </form>
                 </div>
